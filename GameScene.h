@@ -73,4 +73,6 @@ class GameScene {
 	Sphere sphere;
 
 	Plane plane;
+
+	Triangle triangle;
 };

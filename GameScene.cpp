@@ -72,6 +72,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	plane.normal = XMVectorSet(0, 1, 0, 0);
 	plane.distance = 0.0f;
+
+	triangle.p0 = XMVectorSet(-1.0f, 0, -1.0f, 1);
+	triangle.p1 = XMVectorSet(-1.0f, 0, +1.0f, 1);
+	triangle.p2 = XMVectorSet(+1.0f, 0, -1.0f, 1);
+	triangle.normal = XMVectorSet(0.0f, 1.0f, 0.0f, 0);
 }
 
 void GameScene::Update()
@@ -105,7 +110,7 @@ void GameScene::Update()
 	debugText.Print(spherestr.str(), 50, 180, 1.0f);
 
 	XMVECTOR inter;
-	bool hit = Collision::CheckSphere2Plane(sphere, plane);
+	bool hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
 	if (hit) {
 		debugText.Print("HIT", 50, 200, 1.0f);
 	
