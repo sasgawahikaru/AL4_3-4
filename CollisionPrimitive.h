@@ -17,3 +17,7 @@ public:
 	DirectX::XMVECTOR p2;
 	DirectX::XMVECTOR normal;
 };
+struct Ray {
+	DirectX::XMVECTOR start = { 0,0,0,1 };
+	DirectX::XMVECTOR dir = { 1,0,0,0 };
+};

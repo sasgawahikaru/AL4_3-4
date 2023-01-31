@@ -100,3 +100,18 @@ bool Collision::CheckSphere2Triangle(const Sphere& sphere,
 	}
 	return true;
 }
+
+bool Collision::CheckRay2Plane(const Ray& ray, const Plane& plane, 
+	float* distance, DirectX::XMVECTOR* inter)
+{
+	const float epsilon = 1.0e-5f;
+	float d1 = XMVector3Dot(plane.normal, ray.dir).m128_f32[0];
+	if (d1 > -epsilon) { return false; }
+	float d2 = XMVector3Dot(plane.normal, ray.start).m128_f32[0];
+	float dist = d2 - plane.distance;
+	float t = dist / -d1;
+	if (t < 0)return false;
+	if (distance) { *distance = t; }
+	if (inter) { *inter = ray.start + t * ray.dir; }
+	return true;
+}

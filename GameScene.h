@@ -75,4 +75,6 @@ class GameScene {
 	Plane plane;
 
 	Triangle triangle;
+
+	Ray ray;
 };

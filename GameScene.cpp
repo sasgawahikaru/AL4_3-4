@@ -77,6 +77,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	triangle.p1 = XMVectorSet(-1.0f, 0, +1.0f, 1);
 	triangle.p2 = XMVectorSet(+1.0f, 0, -1.0f, 1);
 	triangle.normal = XMVectorSet(0.0f, 1.0f, 0.0f, 0);
+
+	ray.start = XMVectorSet(0, 1, 0, 1);
+	ray.dir = XMVectorSet(0, -1, 0, 0);
 }
 
 void GameScene::Update()
@@ -87,41 +90,73 @@ void GameScene::Update()
 	objGround->Update();
 	objFighter->Update();
 
-	debugText.Print("AD: move camera LeftRight", 50, 50, 1.0f);
-	debugText.Print("WS: move camera UpDown", 50, 70, 1.0f);
-	debugText.Print("ARROW: move camera FrontBack", 50, 90, 1.0f);
+	debugText.Print("AD: left right", 50, 50, 1.0f);
+	debugText.Print("WS: up down", 50, 70, 1.0f);
+	//debugText.Print("ARROW: move camera FrontBack", 50, 90, 1.0f);
 
+	//{
+	//	XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
+	//	if (input->PushKey(DIK_S)) { sphere.center += moveY; }
+	//	else if (input->PushKey(DIK_W)) { sphere.center -= moveY; }
+
+	//	XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
+	//	if (input->PushKey(DIK_D)) { sphere.center += moveX; }
+	//	else if (input->PushKey(DIK_A)) { sphere.center -= moveX; }
+	//}
+	//std::ostringstream spherestr;
+
+	//spherestr << "Sphere("
+	//	<< std::fixed << std::setprecision(2)
+	//	<< sphere.center.m128_f32[0] << ","
+	//	<< sphere.center.m128_f32[1] << ","
+	//	<< sphere.center.m128_f32[2] << ")";
+	//debugText.Print(spherestr.str(), 50, 180, 1.0f);
+
+	//XMVECTOR inter;
+	//bool hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+	//if (hit) {
+	//	debugText.Print("HIT", 50, 200, 1.0f);
+	//
+	//	spherestr.str("");
+	//	spherestr.clear();
+	//	spherestr << "("
+	//		<< std::fixed << std::setprecision(2)
+	//		<< sphere.center.m128_f32[0] << ","
+	//		<< sphere.center.m128_f32[1] << ","
+	//		<< sphere.center.m128_f32[2] << ")";
+	//	debugText.Print(spherestr.str(), 50, 220, 1.0f);
+	//}
 	{
-		XMVECTOR moveY = XMVectorSet(0, 0.01f, 0, 0);
-		if (input->PushKey(DIK_S)) { sphere.center += moveY; }
-		else if (input->PushKey(DIK_W)) { sphere.center -= moveY; }
+		XMVECTOR moveZ = XMVectorSet( 0,0,0.01f,0 );
+		if (input->PushKey(DIK_S)) { ray.start += moveZ; }
+		else if (input->PushKey(DIK_W)) { ray.start -= moveZ; }
 
 		XMVECTOR moveX = XMVectorSet(0.01f, 0, 0, 0);
-		if (input->PushKey(DIK_D)) { sphere.center += moveX; }
-		else if (input->PushKey(DIK_A)) { sphere.center -= moveX; }
+		if (input->PushKey(DIK_D)) { ray.start += moveX; }
+		else if (input->PushKey(DIK_A)) { ray.start -= moveX; }
 	}
-	std::ostringstream spherestr;
-
-	spherestr << "Sphere("
+	std::ostringstream raystr;
+	raystr << "lay.start("
 		<< std::fixed << std::setprecision(2)
-		<< sphere.center.m128_f32[0] << ","
-		<< sphere.center.m128_f32[1] << ","
-		<< sphere.center.m128_f32[2] << ")";
-	debugText.Print(spherestr.str(), 50, 180, 1.0f);
+		<< ray.start.m128_f32[0] << ","
+		<< ray.start.m128_f32[1] << ","
+		<< ray.start.m128_f32[2] << ")";
+	debugText.Print(raystr.str(), 50, 180, 1.0f);
 
 	XMVECTOR inter;
-	bool hit = Collision::CheckSphere2Triangle(sphere, triangle, &inter);
+	float distance;
+	bool hit = Collision::CheckRay2Plane(ray, plane, &distance, &inter);
 	if (hit) {
-		debugText.Print("HIT", 50, 200, 1.0f);
-	
-		spherestr.str("");
-		spherestr.clear();
-		spherestr << "("
+		debugText.Print("HIT", 50, 260, 1.0f);
+
+		raystr.str("");
+		raystr.clear();
+		raystr << "("
 			<< std::fixed << std::setprecision(2)
 			<< sphere.center.m128_f32[0] << ","
 			<< sphere.center.m128_f32[1] << ","
 			<< sphere.center.m128_f32[2] << ")";
-		debugText.Print(spherestr.str(), 50, 220, 1.0f);
+		debugText.Print(raystr.str(), 50, 280, 1.0f);
 	}
 }
 
